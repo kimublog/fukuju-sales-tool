@@ -83,6 +83,7 @@
   }
 
   .form-group input[type="text"],
+  .form-group input[type="date"],
   .form-group select,
   .form-group textarea {
     width: 100%;
@@ -352,6 +353,7 @@
     .btn { width: 100%; text-align: center; }
 
     .form-group input[type="text"],
+    .form-group input[type="date"],
     .form-group select,
     .form-group textarea {
       font-size: 16px;
@@ -425,6 +427,11 @@
           <option value="medium">中規模（〜50席/店舗）</option>
           <option value="large">大規模・チェーン</option>
         </select>
+      </div>
+
+      <div class="form-group">
+        <label for="visitDate">訪問日</label>
+        <input type="date" id="visitDate">
       </div>
 
       <div class="form-group">
@@ -1281,6 +1288,20 @@ function getToday() {
   return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
 }
 
+function formatDate(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+}
+
+// 訪問日の初期値を今日に設定
+document.addEventListener("DOMContentLoaded", function() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  document.getElementById("visitDate").value = yyyy + "-" + mm + "-" + dd;
+});
+
 function escapeHtml(str) {
   const div = document.createElement("div");
   div.textContent = str;
@@ -1309,6 +1330,8 @@ function generate() {
   const clientName = escapeHtml(document.getElementById("clientName").value.trim());
   const bizType = document.getElementById("bizType").value;
   const scale = document.getElementById("scale").value;
+  const visitDateRaw = document.getElementById("visitDate").value;
+  const visitDate = visitDateRaw ? formatDate(visitDateRaw) : getToday();
   const area = escapeHtml(document.getElementById("area").value.trim() || "―");
   const staffName = escapeHtml(document.getElementById("staffName").value.trim() || "―");
   const purpose = document.getElementById("purpose").value;
@@ -1366,7 +1389,7 @@ function generate() {
       <div class="sheet-meta">
         <div>訪問先：${clientName}</div>
         <div>業態：${bizLabel}（${scaleLabel}）</div>
-        <div>訪問日：${getToday()}</div>
+        <div>訪問日：${visitDate}</div>
         <div>担当：${staffName}</div>
         <div>エリア：${area}</div>
         <div>目的：${purposeLabel}</div>
