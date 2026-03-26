@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>福寿 営業準備シート</title>
+<style>
+  :root {
+    --primary: #1a3a4a;
+    --primary-light: #2a5a6a;
+    --accent: #8b6914;
+    --bg: #f7f5f0;
+    --card-bg: #ffffff;
+    --border: #d4cfc5;
+    --text: #2c2c2c;
+    --text-light: #5a5a5a;
+    --section-bg: #faf8f4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--primary);
+    color: #fff;
+    padding: 16px 24px;
+    text-align: center;
+    border-bottom: 3px solid var(--accent);
+  }
+
+  .header h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .header .sub {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  /* --- フォーム --- */
+  .form-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .form-section h2 {
+    font-size: 1rem;
+    color: var(--primary);
+    border-left: 4px solid var(--accent);
+    padding-left: 10px;
+    margin-bottom: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--primary);
+  }
+
+  .form-group input[type="text"],
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: #fff;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 2px rgba(26, 58, 74, 0.1);
+  }
+
+  .form-group textarea {
+    height: 80px;
+    resize: vertical;
+  }
+
+  .product-category-label {
+    font-size: 0.82rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+    display: block;
+  }
+
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 8px;
+  }
+
+  .checkbox-grid label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-weight: 400;
+    font-size: 0.88rem;
+    cursor: pointer;
+    padding: 6px 4px;
+    border-radius: 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .checkbox-grid label:active {
+    background: rgba(26, 58, 74, 0.05);
+  }
+
+  .checkbox-grid input[type="checkbox"] {
+    accent-color: var(--primary);
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin-top: 1px;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn:active { transform: scale(0.98); }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .btn-primary:hover { background: var(--primary-light); }
+
+  .btn-secondary {
+    background: #e8e4dc;
+    color: var(--text);
+    margin-right: 8px;
+  }
+
+  .btn-secondary:hover { background: #ddd8ce; }
+
+  .btn-print {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-print:hover { background: #a07a18; }
+
+  .error-msg {
+    color: #c0392b;
+    font-size: 0.82rem;
+    margin-top: 4px;
+    display: none;
+  }
+
+  /* --- 結果画面 --- */
+  #result-view { display: none; }
+
+  .result-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .sheet {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sheet-header {
+    background: var(--primary);
+    color: #fff;
+    padding: 20px 24px;
+  }
+
+  .sheet-header h2 {
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .sheet-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 16px;
+    font-size: 0.85rem;
+    opacity: 0.9;
+  }
+
+  .sheet-section {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sheet-section:last-child { border-bottom: none; }
+
+  .sheet-section h3 {
+    font-size: 0.95rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+
+  .sheet-section p,
+  .sheet-section li {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  .sheet-section ul,
+  .sheet-section ol {
+    padding-left: 20px;
+  }
+
+  .sheet-section li { margin-bottom: 6px; }
+
+  .product-card {
+    background: var(--section-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .product-card h4 {
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin-bottom: 6px;
+  }
+
+  .product-card p {
+    font-size: 0.85rem;
+    color: var(--text-light);
+  }
+
+  .keyword-list {
+    list-style: none;
+    padding: 0;
+    counter-reset: kw;
+  }
+
+  .keyword-list li {
+    counter-increment: kw;
+    padding: 10px 14px;
+    background: var(--section-bg);
+    border-left: 3px solid var(--accent);
+    margin-bottom: 8px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .keyword-list li::before {
+    content: counter(kw) ". ";
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .qa-item {
+    margin-bottom: 14px;
+  }
+
+  .qa-item .q {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+
+  .qa-item .q::before { content: "Q："; }
+
+  .qa-item .a {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    padding-left: 24px;
+  }
+
+  .qa-item .a::before {
+    content: "A：";
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .memo-area {
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    min-height: 160px;
+    padding: 12px;
+    background: #fdfcfa;
+  }
+
+  .memo-area p {
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+
+  /* --- レスポンシブ --- */
+  @media (max-width: 768px) {
+    .checkbox-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 16px 10px; }
+    .form-section { padding: 14px; }
+    .sheet-meta { grid-template-columns: 1fr; }
+    .sheet-section { padding: 14px; }
+    .sheet-header { padding: 16px; }
+    .result-actions { flex-direction: column; }
+    .btn { width: 100%; text-align: center; }
+
+    .form-group input[type="text"],
+    .form-group select,
+    .form-group textarea {
+      font-size: 16px;
+    }
+
+    .header h1 { font-size: 1.2rem; }
+
+    .qa-item .a { padding-left: 0; }
+  }
+
+  /* --- 印刷 --- */
+  @media print {
+    body { background: #fff; }
+    .header { padding: 10px; border-bottom: 2px solid #333; background: #fff; color: #000; }
+    .header .sub { display: none; }
+    #form-view, .result-actions, .no-print { display: none !important; }
+    #result-view { display: block !important; }
+    .container { padding: 0; max-width: 100%; }
+    .sheet { border: none; border-radius: 0; }
+    .sheet-header { background: #fff; color: #000; border-bottom: 2px solid #000; padding: 12px 16px; }
+    .sheet-section { padding: 14px 16px; border-bottom: 1px solid #ccc; }
+    .sheet-section h3 { border-bottom-color: #333; }
+    .product-card { background: #f5f5f5; border-color: #ccc; }
+    .keyword-list li { background: #f5f5f5; border-left-color: #333; }
+    .memo-area { min-height: 120px; border-color: #999; }
+    .btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>福寿 営業準備シート</h1>
+  <div class="sub">株式会社浅利佐助商店 ｜ 創業明治5年</div>
+</div>
+
+<div class="container">
+
+  <!-- 入力フォーム -->
+  <div id="form-view">
+    <div class="form-section">
+      <h2>訪問先基本情報</h2>
+
+      <div class="form-group">
+        <label for="clientName">訪問先名 <span style="color:#c0392b">*</span></label>
+        <input type="text" id="clientName" placeholder="例：秋田グランドホテル">
+        <div class="error-msg" id="err-clientName">訪問先名を入力してください</div>
+      </div>
+
+      <div class="form-group">
+        <label for="bizType">訪問先の業態 <span style="color:#c0392b">*</span></label>
+        <select id="bizType">
+          <option value="">選択してください</option>
+          <option value="super">スーパー・食料品店</option>
+          <option value="restaurant">飲食店・レストラン</option>
+          <option value="hotel">ホテル・旅館</option>
+          <option value="michinoeki">道の駅・観光施設</option>
+          <option value="tonya">問屋</option>
+          <option value="wholesale">業務用食品卸</option>
+          <option value="udon">うどん製造会社</option>
+          <option value="ec">EC・オンライン販売</option>
+          <option value="other">その他</option>
+        </select>
+        <div class="error-msg" id="err-bizType">業態を選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <label for="scale">訪問先の規模</label>
+        <select id="scale">
+          <option value="small">個人店・小規模</option>
+          <option value="medium">中規模（〜50席/店舗）</option>
+          <option value="large">大規模・チェーン</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="area">訪問先のエリア</label>
+        <input type="text" id="area" placeholder="例：秋田市中心部">
+      </div>
+
+      <div class="form-group">
+        <label for="staffName">訪問担当者名</label>
+        <input type="text" id="staffName" placeholder="例：佐藤">
+      </div>
+
+      <div class="form-group">
+        <label for="purpose">訪問目的</label>
+        <select id="purpose">
+          <option value="new">新規開拓</option>
+          <option value="follow">既存顧客フォロー</option>
+          <option value="newproduct">新商品提案</option>
+          <option value="regular">定期訪問</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>提案したい商品（複数選択可）</h2>
+
+      <div class="form-group">
+        <label class="product-category-label">醤油</label>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="product" value="hyakunen-shoyu"> 天然醸造 百年蔵生じょうゆ</label>
+          <label><input type="checkbox" name="product" value="shirakami-shoyu"> 白神大豆しょうゆ</label>
+          <label><input type="checkbox" name="product" value="marudaizu-shoyu"> 国産丸大豆しょうゆ</label>
+          <label><input type="checkbox" name="product" value="konbu-katsuo"> 昆布とかつおのしょうゆ（新商品）</label>
+          <label><input type="checkbox" name="product" value="fukuju-shoyu"> 福寿醤油</label>
+          <label><input type="checkbox" name="product" value="tokkyuu-shoyu"> 福寿 特級醤油</label>
+          <label><input type="checkbox" name="product" value="amakuchi"> 福寿 甘口醤油</label>
+          <label><input type="checkbox" name="product" value="usukuchi"> 福寿 淡口醤油</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="product-category-label">味噌・調味味噌</label>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="product" value="hyakunen-miso"> 百年蔵みそ</label>
+          <label><input type="checkbox" name="product" value="nama-tsubu"> 秋田生みそ つぶ</label>
+          <label><input type="checkbox" name="product" value="genen-miso"> おいしい減塩生みそ</label>
+          <label><input type="checkbox" name="product" value="amakuchi-miso"> あまくちみそ</label>
+          <label><input type="checkbox" name="product" value="yurara-aka"> ゆらら 秋田みそ 赤づくり</label>
+          <label><input type="checkbox" name="product" value="yurara-shiro"> ゆらら 秋田みそ 白づくり</label>
+          <label><input type="checkbox" name="product" value="satto-katsuo"> さっとみそ汁 かつおだし</label>
+          <label><input type="checkbox" name="product" value="satto-niboshi"> さっとみそ汁 にぼしだし</label>
+          <label><input type="checkbox" name="product" value="pork-miso"> 八幡平ポークみそ</label>
+          <label><input type="checkbox" name="product" value="hinai-miso"> 比内地鶏肉みそ</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="product-category-label">つゆ・だし</label>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="product" value="tarekko"> たれっこ</label>
+          <label><input type="checkbox" name="product" value="washoku-no-moto"> 和食の素</label>
+          <label><input type="checkbox" name="product" value="konbu-shirodashi"> 昆布白だし</label>
+          <label><input type="checkbox" name="product" value="sakuramasu"> 十和田湖サクラマス魚醤白だし（新商品）</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="product-category-label">比内地鶏スープ・つゆ</label>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="product" value="hinai-soup"> 比内地鶏スープ</label>
+          <label><input type="checkbox" name="product" value="hinai-tsuyu"> 比内地鶏つゆ</label>
+          <label><input type="checkbox" name="product" value="premium-hinai-shoyu"> PREMIUM比内地鶏だしつゆ 醤油</label>
+          <label><input type="checkbox" name="product" value="premium-hinai-shio"> PREMIUM比内地鶏だしつゆ 塩</label>
+          <label><input type="checkbox" name="product" value="kiritanpo-tsuyu"> きりたんぽ鍋つゆ</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="product-category-label">その他調味料・漬物</label>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="product" value="hanawa-su"> 花輪酢</label>
+          <label><input type="checkbox" name="product" value="butadon-uma"> 福寿 豚丼のたれ（旨だれ）</label>
+          <label><input type="checkbox" name="product" value="butadon-kara"> 福寿 豚丼のたれ（辛口にんにく）</label>
+          <label><input type="checkbox" name="product" value="misozuke-daikon"> 味噌漬け大根</label>
+          <label><input type="checkbox" name="product" value="misozuke-konbu"> 味噌漬け昆布</label>
+          <label><input type="checkbox" name="product" value="amakara-daikon"> 甘辛大根漬け</label>
+        </div>
+      </div>
+
+      <div class="error-msg" id="err-product">提案商品を1つ以上選択してください</div>
+    </div>
+
+    <div class="form-section">
+      <h2>訪問先について気になること（任意）</h2>
+      <div class="form-group">
+        <textarea id="notes" placeholder="例：最近地産地消に力を入れているらしい、新メニュー開発中とのこと"></textarea>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="generate()">準備シートを生成する</button>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="result-view">
+    <div class="result-actions no-print">
+      <button class="btn btn-secondary" onclick="backToForm()">最初からやり直す</button>
+      <button class="btn btn-print" onclick="window.print()">印刷する</button>
+    </div>
+    <div class="sheet" id="sheet"></div>
+  </div>
+
+</div>
+
+<script>
+// --- 固定データ ---
+const BIZ_LABELS = {
+  super: "スーパー・食料品店",
+  restaurant: "飲食店・レストラン",
+  hotel: "ホテル・旅館",
+  michinoeki: "道の駅・観光施設",
+  tonya: "問屋",
+  wholesale: "業務用食品卸",
+  udon: "うどん製造会社",
+  ec: "EC・オンライン販売",
+  other: "その他"
+};
+
+const SCALE_LABELS = {
+  small: "個人店・小規模",
+  medium: "中規模",
+  large: "大規模・チェーン"
+};
+
+const PURPOSE_LABELS = {
+  new: "新規開拓",
+  follow: "既存顧客フォロー",
+  newproduct: "新商品提案",
+  regular: "定期訪問"
+};
+
+const PRODUCT_INFO = {
+  // --- 醤油 ---
+  "hyakunen-shoyu": {
+    name: "天然醸造 百年蔵生じょうゆ",
+    cat: "醤油",
+    desc: "天然醸造・非加熱の生醤油。蔵付き酵母で熟成。深いコクと香りが特徴。"
+  },
+  "shirakami-shoyu": {
+    name: "白神大豆しょうゆ",
+    cat: "醤油",
+    desc: "世界遺産白神地域産大豆と秋田県産小麦使用の丸大豆醤油。刺身・寿司・冷奴に最適。"
+  },
+  "marudaizu-shoyu": {
+    name: "国産丸大豆しょうゆ",
+    cat: "醤油",
+    desc: "国産原料のみ使用の本醸造醤油。ほのかな甘みと芳醇な香り。つけ・かけ・煮物に対応。"
+  },
+  "konbu-katsuo": {
+    name: "昆布とかつおのしょうゆ（新商品）",
+    cat: "醤油",
+    desc: "2026年3月発売。本醸造醤油に昆布・かつおだしを合わせたうす塩仕立てのだし醤油。"
+  },
+  "fukuju-shoyu": {
+    name: "福寿醤油",
+    cat: "醤油",
+    desc: "混合しょうゆ。調理用・卓上用兼用の定番醤油。"
+  },
+  "tokkyuu-shoyu": {
+    name: "福寿 特級醤油",
+    cat: "醤油",
+    desc: "本醸造・厳選原料使用。うま味が強くキレのある風味が特徴。"
+  },
+  "amakuchi": {
+    name: "福寿 甘口醤油",
+    cat: "醤油",
+    desc: "第47回全国醤油品評会 優秀賞受賞。塩分控えめ、甘味・旨味を強化した醤油。"
+  },
+  "usukuchi": {
+    name: "福寿 淡口醤油",
+    cat: "醤油",
+    desc: "素材の色を鮮やかに仕上げる淡口醤油。煮物に最適。"
+  },
+  // --- 味噌・調味味噌 ---
+  "hyakunen-miso": {
+    name: "百年蔵みそ",
+    cat: "味噌",
+    desc: "無添加生みそ。秋田県産あきたこまち米・秋田県産大豆・八幡平伏流水使用。Amazon味噌カテゴリ1位獲得。"
+  },
+  "nama-tsubu": {
+    name: "秋田生みそ つぶ",
+    cat: "味噌",
+    desc: "加熱処理やアルコール添加を一切行わない、生きたままの美味しさの粒味噌。"
+  },
+  "genen-miso": {
+    name: "おいしい減塩生みそ",
+    cat: "味噌",
+    desc: "かるしお認定。食塩分8%、米みそ比較で33%カット。健康志向向け。"
+  },
+  "amakuchi-miso": {
+    name: "あまくちみそ",
+    cat: "味噌",
+    desc: "米こうじをたっぷり使用した12割糀の甘口みそ。やさしい甘さが特徴。"
+  },
+  "yurara-aka": {
+    name: "ゆらら 秋田みそ 赤づくり",
+    cat: "味噌",
+    desc: "糀歩合8割の辛口みそ。山吹色に仕上げた本格秋田みそ。"
+  },
+  "yurara-shiro": {
+    name: "ゆらら 秋田みそ 白づくり",
+    cat: "味噌",
+    desc: "糀歩合8割。まろやかな風味とあっさりした味わいの白みそ。"
+  },
+  "satto-katsuo": {
+    name: "福寿 さっとみそ汁 かつおだし",
+    cat: "調味味噌",
+    desc: "液状タイプの即席みそ汁の素。約20杯分。かつおだしの風味。"
+  },
+  "satto-niboshi": {
+    name: "福寿 さっとみそ汁 にぼしだし",
+    cat: "調味味噌",
+    desc: "液状タイプの即席みそ汁の素。約20杯分。にぼしだしの風味。"
+  },
+  "pork-miso": {
+    name: "八幡平ポークみそ",
+    cat: "調味味噌",
+    desc: "秋田県産八幡平ポークの挽き肉を使用した肉味噌。ご飯のお供に。"
+  },
+  "hinai-miso": {
+    name: "比内地鶏肉みそ",
+    cat: "調味味噌",
+    desc: "秋田県産比内地鶏の粗挽き肉を使用した肉味噌。比内地鶏のブランド力。"
+  },
+  // --- つゆ・だし ---
+  "tarekko": {
+    name: "たれっこ",
+    cat: "つゆ・だし",
+    desc: "自家製本醸造しょうゆにかつおぶし・昆布の一番だしを合わせた濃縮3倍の万能つゆ。"
+  },
+  "washoku-no-moto": {
+    name: "和食の素",
+    cat: "つゆ・だし",
+    desc: "本醸造しょうゆに鰹の風味と昆布の旨味を加えた濃縮5倍の万能つゆ。煮物・丼物・炒め物に。"
+  },
+  "konbu-shirodashi": {
+    name: "昆布白だし",
+    cat: "つゆ・だし",
+    desc: "北海道産日高昆布使用・化学調味料無添加の白だし。ボトル内に昆布を含有。"
+  },
+  "sakuramasu": {
+    name: "十和田湖サクラマス魚醤白だし（新商品）",
+    cat: "つゆ・だし",
+    desc: "2026年2月発売。十和田湖産サクラマスの魚醤を使った白だし。地域の希少素材を活かした独自商品。"
+  },
+  // --- 比内地鶏スープ・つゆ ---
+  "hinai-soup": {
+    name: "比内地鶏スープ",
+    cat: "比内地鶏",
+    desc: "濃縮5倍。比内地鶏の鶏がらと鶏肉使用。自家製本醸造醤油合わせ。化学調味料不使用。"
+  },
+  "hinai-tsuyu": {
+    name: "比内地鶏つゆ",
+    cat: "比内地鶏",
+    desc: "濃縮4倍のめんつゆ。比内地鶏ガラだし・かつお・むろあじ節使用。"
+  },
+  "premium-hinai-shoyu": {
+    name: "PREMIUM比内地鶏だしつゆ 醤油",
+    cat: "比内地鶏",
+    desc: "比内地鶏鶏がらの透明だしに椎茸・かつおぶしの風味を合わせた醤油味。"
+  },
+  "premium-hinai-shio": {
+    name: "PREMIUM比内地鶏だしつゆ 塩",
+    cat: "比内地鶏",
+    desc: "比内地鶏鶏がらの透明だしに玉ねぎ・こんぶ・椎茸の風味を合わせた塩味。"
+  },
+  "kiritanpo-tsuyu": {
+    name: "きりたんぽ鍋つゆ",
+    cat: "比内地鶏",
+    desc: "濃縮5倍。比内地鶏鶏がら使用・ゴボウ風味。化学調味料不使用。"
+  },
+  // --- その他調味料・漬物 ---
+  "hanawa-su": {
+    name: "花輪酢",
+    cat: "その他",
+    desc: "江戸時代創業の製法で作る酢。酸度11.2%で一般的な酢の約3倍濃く、少量で効く。"
+  },
+  "butadon-uma": {
+    name: "福寿 豚丼のたれ（旨だれ）",
+    cat: "その他",
+    desc: "自家製味噌・醤油・米糀使用。濃厚な甘みと旨味のたれ。"
+  },
+  "butadon-kara": {
+    name: "福寿 豚丼のたれ（辛口にんにく）",
+    cat: "その他",
+    desc: "自家製味噌・醤油・米糀使用。にんにくと豆板醤のピリ辛タイプ。"
+  },
+  "misozuke-daikon": {
+    name: "味噌漬け大根",
+    cat: "漬物",
+    desc: "国産青首大根を秋田味噌に漬込。パリッとした歯ざわり。"
+  },
+  "misozuke-konbu": {
+    name: "味噌漬け昆布",
+    cat: "漬物",
+    desc: "北海道産昆布を秋田味噌にじっくり漬込んだ漬物。"
+  },
+  "amakara-daikon": {
+    name: "甘辛大根漬け",
+    cat: "漬物",
+    desc: "唐辛子でピリッと甘辛く味付けした大根漬け。"
+  }
+};
+
+// --- 業態別プロファイル ---
+const PROFILES = {
+  super: {
+    small: "地域密着型の食料品店は、大手にない独自の品揃えが差別化の鍵です。地元産・無添加などの付加価値商品への関心が高く、試食販売やPOPによるストーリー訴求が効果的です。",
+    medium: "中規模スーパーは売場の差別化と粗利率の改善が関心事です。PB商品やこだわり商品の棚を拡大する傾向があり、品質と価格のバランスが重視されます。",
+    large: "大規模スーパー・チェーンは安定供給力・価格競争力・販促支援が主な関心事です。定番棚への導入には実績データ（売上・回転率）と販促企画の提案が不可欠です。"
+  },
+  restaurant: {
+    small: "個人飲食店はメニューの差別化と食材のストーリーに強い関心があります。シェフ・オーナーの料理哲学に合う提案が響きます。試食サンプルの提供が効果的です。",
+    medium: "中規模飲食店は食材コスト・安定供給・差別化の3点が主な関心事です。地元食材・受賞歴などのストーリーが料理の付加価値になります。",
+    large: "チェーン飲食店は統一品質・安定供給・コスト管理が最優先です。セントラルキッチン対応やロット単位の価格提案が求められます。"
+  },
+  hotel: {
+    small: "小規模旅館は「ここでしか味わえない」体験の提供に注力しています。地元食材を使った朝食・夕食の差別化に強い関心があります。",
+    medium: "中規模ホテル・旅館は宿泊プランの付加価値向上と口コミ評価の改善に注力しています。料理の質が宿泊評価に直結するため、食材選びに慎重です。",
+    large: "大規模ホテルはブランドイメージの維持と宴会・レストラン部門の収益性が関心事です。地元食材の活用はインバウンド対応・地域貢献の面でもアピールポイントになります。"
+  },
+  michinoeki: {
+    small: "小規模の観光施設は地元ならではの商品ラインナップが集客の要です。お土産としての見栄え・価格帯・地元感のバランスが重要です。",
+    medium: "中規模の道の駅は品揃えの充実と地元産品の訴求に力を入れています。POPやストーリーカードなどの販促物が購買を後押しします。",
+    large: "大規模道の駅・観光施設は来場者数が多く、回転率の高い定番商品と季節限定品の両方が求められます。試食コーナーの設置が効果的です。"
+  },
+  tonya: {
+    small: "小規模問屋は地域に根ざした取引先との信頼関係が強みです。独自性のある商品ラインナップで差別化を図りたいニーズがあり、メーカーとの密な連携を重視します。",
+    medium: "中規模問屋は取扱商品の拡充と利益率の改善が重要テーマです。小売店・飲食店への提案力を高める商品情報や販促素材の提供が喜ばれます。",
+    large: "大規模問屋は安定供給・価格競争力・物流効率が最重要です。エリアごとの販売データやトレンド情報の共有、営業同行などのサポート体制が選定基準になります。"
+  },
+  wholesale: {
+    small: "小規模卸は特定エリアや業態に特化した提案力が強みです。独自の品揃えで取引先との関係を深めたいニーズがあります。",
+    medium: "中規模卸は取扱商品の幅を広げつつ、利益率の高い商品を求めています。メーカーの営業サポート体制も選定基準になります。",
+    large: "大規模卸は物流効率・価格・安定供給が最重要です。全国展開している場合、エリアごとの販促支援やデータ提供が求められます。"
+  },
+  udon: {
+    small: "小規模うどん製造会社は味の個性と地域性が差別化の鍵です。つゆ・だしの品質が製品の評価を大きく左右するため、原料へのこだわりに強い関心があります。",
+    medium: "中規模うどん製造会社は製品ラインナップの拡充と品質の安定化が課題です。つゆの味が売上に直結するため、コストと品質のバランスを重視します。安定供給が取引継続の前提条件です。",
+    large: "大規模うどん製造会社は大量ロットでの安定供給・価格・品質の一貫性が最重要です。OEM対応力やロット柔軟性が取引開始の判断基準になります。"
+  },
+  ec: {
+    small: "小規模EC事業者はニッチな商品・ストーリー性のある商品で差別化を図ります。商品写真・説明文の素材提供が喜ばれます。",
+    medium: "中規模ECは商品ページの充実とレビュー獲得が売上を左右します。Amazon味噌カテゴリ1位の実績は強力な訴求材料です。",
+    large: "大規模ECモール・プラットフォームは取扱SKU数と回転率が重視されます。セット商品や限定パッケージの企画提案が有効です。"
+  },
+  other: {
+    small: "訪問先の具体的なニーズをヒアリングし、福寿の商品ラインナップの中から最適な提案を行います。",
+    medium: "訪問先の事業規模に合わせた提案を行います。まずは主力商品の試食・試用から始めるのが効果的です。",
+    large: "大規模事業者向けには安定供給力とOEM対応力をアピールします。具体的な取引条件の提示が求められます。"
+  }
+};
+
+// --- 商品×業態 提案理由 ---
+const PRODUCT_REASONS = {
+  "hyakunen-miso": {
+    super: "Amazon味噌カテゴリ1位の実績はPOP・棚前販促に活用でき、消費者の購買意欲を後押しします。無添加・県産原料のこだわりは健康志向の客層に響きます。",
+    restaurant: "無添加・秋田県産原料のこだわりはメニューのストーリーとして使いやすい。天然醸造の風味の豊かさを実際に試食してもらうと効果的です。",
+    hotel: "朝食の味噌汁を「秋田県産無添加味噌使用」と訴求することで宿泊体験の付加価値になります。旅館の地元食材演出に最適です。",
+    michinoeki: "お土産としての知名度と信頼感があり、Amazon1位の実績POPで観光客の購買を後押しします。秋田らしさを感じる代表商品です。",
+    tonya: "Amazon味噌カテゴリ1位の販売実績は、問屋の取引先（小売店・飲食店）への提案時に強力な武器になります。無添加・天然醸造で利益率の高い付加価値商品として棚を確保しやすい商品です。",
+    wholesale: "Amazon味噌カテゴリ1位の販売実績があり、取引先への提案がしやすい商品です。無添加・天然醸造の品質で差別化できます。",
+    udon: "うどんのつけ汁・味噌煮込みうどん用として提案可能です。秋田県産原料の無添加味噌は、こだわりの味噌煮込みうどんの差別化素材として訴求できます。",
+    ec: "Amazon味噌カテゴリ1位獲得の実績があり、ECでの販売力は実証済みです。レビュー評価も高く、リピート率が期待できます。",
+    other: "無添加・天然醸造の生味噌で、Amazon味噌カテゴリ1位獲得。品質と実績の両面で訴求できます。"
+  },
+  "hyakunen-shoyu": {
+    super: "天然醸造・非加熱の生醤油は差別化商品として棚に新鮮さをもたらします。品質にこだわる顧客層の固定客化に貢献します。",
+    restaurant: "非加熱の生醤油は香りと旨みが格別で、刺身や冷奴など素材を活かす料理で真価を発揮します。料理人の評価が高い商品です。",
+    hotel: "非加熱の生醤油は香りが際立ち、卓上醤油としての格を上げます。「天然醸造」の表記は高級感の演出に最適です。",
+    michinoeki: "天然醸造の本格醤油はお土産として価値が高く、食にこだわる観光客に人気です。",
+    tonya: "天然醸造・非加熱の生醤油は希少性が高く、問屋の商品ラインナップの格を上げます。飲食店・高級スーパーへの提案材料として差別化に貢献します。",
+    wholesale: "天然醸造の生醤油は飲食店向け提案の切り札になります。品質の高さで取引先の信頼を獲得できます。",
+    udon: "天然醸造の生醤油はつゆのベースとして香りとコクが格別です。非加熱のためだしとの相性が良く、めんつゆの味わいを一段引き上げます。",
+    ec: "天然醸造・非加熱という希少性がECでの差別化につながります。グルメ層・健康志向層へのアプローチに適しています。",
+    other: "天然醸造・非加熱の生醤油。深いコクと香りで料理の味わいを引き上げます。"
+  },
+  "amakuchi": {
+    super: "全国醤油品評会優秀賞受賞の実績は消費者への信頼感につながります。東北ならではのまろやかな甘口醤油は根強い需要があります。",
+    restaurant: "煮物・照り焼きなど甘みを活かす料理に最適です。受賞歴をメニューに記載することで付加価値を演出できます。",
+    hotel: "受賞醤油として宴会メニューや特別コースに採用しやすい。品評会受賞のストーリーがゲストへの話題提供になります。",
+    michinoeki: "全国醤油品評会優秀賞受賞のシールが購買の後押しになります。秋田土産として贈答にも使いやすい商品です。",
+    tonya: "全国醤油品評会優秀賞受賞の実績は、問屋が取引先に自信を持って提案できる裏付けになります。東北エリアの甘口需要に加え、全国展開の足がかりにもなります。",
+    wholesale: "全国品評会受賞の実績は取引先への提案時の強い後ろ盾になります。甘口醤油の需要がある東北エリアで特に有効です。",
+    udon: "まろやかな甘みはめんつゆのベース醤油として最適です。品評会受賞の品質は商品パッケージへの記載で消費者への訴求力を高めます。",
+    ec: "品評会受賞歴は商品ページの信頼性向上に直結します。ギフト需要も見込める商品です。",
+    other: "第47回全国醤油品評会優秀賞受賞。まろやかな甘みが料理を引き立てます。"
+  },
+  "tarekko": {
+    super: "万能つゆとして幅広い用途に使えるため、棚回転率が高い商品です。自家製醸造醤油ベースの本格派として差別化できます。",
+    restaurant: "本醸造しょうゆにかつおぶし・昆布の一番だしを合わせた万能つゆ。仕込み時間の短縮と味の安定化に貢献します。",
+    hotel: "朝食のそばつゆ・天つゆとして、また客室の備品としても活用できます。「自家製本醸造」の品質感がホテルの格に合います。",
+    michinoeki: "使い勝手の良い万能つゆはリピート購入されやすく、お土産としても日常使いとしても人気です。",
+    tonya: "万能つゆは飲食店・小売店どちらにも提案しやすく、問屋の取扱商品として回転率が高い商品です。自家製本醸造ベースの品質で他社つゆとの差別化が明確です。",
+    wholesale: "万能つゆは飲食店・小売どちらにも提案しやすい汎用性の高い商品です。安定した需要が見込めます。",
+    udon: "自家製本醸造しょうゆにかつおぶし・昆布の一番だしを合わせた万能つゆは、うどんつゆのベースとして即戦力です。仕込み時間の大幅短縮と味の安定化に直結します。めんつゆOEM開発のベースとしても活用可能です。",
+    ec: "日常的に使う調味料のため定期購入・まとめ買いにつながりやすい商品です。",
+    other: "自家製本醸造しょうゆとかつおぶし・昆布の一番だしを合わせた万能つゆ。幅広い料理に使えます。"
+  },
+  "konbu-katsuo": {
+    super: "2026年3月発売の新商品。新商品の先行導入は売場の鮮度感を高めます。だし醤油の需要は拡大傾向にあります。",
+    restaurant: "新商品のだし醤油は和食全般に使いやすく、メニュー開発のインスピレーションにもなります。先行導入で差別化を図れます。",
+    hotel: "新商品の先行採用は「最新のこだわり食材を取り入れている」というブランドイメージの向上につながります。",
+    michinoeki: "新商品は話題性があり、来場者の興味を引きます。「ここでしか買えない新商品」として訴求できます。",
+    tonya: "2026年3月発売の新商品は、問屋として取引先への新商品情報の先行提供ができ、提案力の強化につながります。だし醤油市場の拡大トレンドに乗れる商品です。",
+    wholesale: "新商品の取り扱いは取引先への情報提供・提案の好機です。先行導入で競合卸との差別化になります。",
+    udon: "昆布とかつおの旨みが効いた新商品の醤油は、めんつゆの風味づけに最適です。新しいつゆの味づくりや限定商品の開発ベースとして提案できます。",
+    ec: "新商品はSNSでの拡散や話題づくりに最適です。先行販売・予約販売など企画の幅が広がります。",
+    other: "2026年3月発売の新商品。昆布とかつおの旨みが効いた醤油で、和食全般に活用できます。"
+  },
+  "hinai-soup": {
+    super: "日本三大地鶏のブランド力は消費者の購買動機として強力です。鍋の季節はもちろん、ラーメン・うどんの汁としても通年需要があります。",
+    restaurant: "比内地鶏ブランド認証取得のスープは、メニューに「比内地鶏使用」と記載でき集客力が上がります。鍋・麺類・リゾットなど活用幅が広いです。",
+    hotel: "比内地鶏は秋田を代表する食材。宿泊プランの目玉料理やコースの一品として高い訴求力があります。インバウンド客にも人気です。",
+    michinoeki: "比内地鶏は秋田観光の象徴的食材。お土産としてのブランド力が非常に高く、観光客の購買意欲を直接刺激します。",
+    tonya: "比内地鶏ブランドは知名度が高く、問屋の取引先（飲食店・小売店・ホテル）への提案力が抜群です。季節を問わず安定した需要が見込め、取扱いメリットの説明がしやすい商品です。",
+    wholesale: "比内地鶏ブランドは取引先の飲食店・小売店への提案力が高い商材です。季節を問わず提案できます。",
+    udon: "比内地鶏スープはうどんのかけ汁・つけ汁のベースとして高い付加価値を生みます。「比内地鶏うどん」として商品化すれば、他社製品との明確な差別化になります。",
+    ec: "比内地鶏のブランド力はECでの検索流入・クリック率向上に直結します。ギフト需要も高い商品です。",
+    other: "日本三大地鶏「比内地鶏」ブランド認証取得の本格スープ。濃厚で上品な味わいです。"
+  },
+  "sakuramasu": {
+    super: "2026年2月発売の新商品で話題性があります。十和田湖産サクラマスという希少素材の魚醤白だしは他にない唯一無二の商品です。",
+    restaurant: "他店にない独自の味を求める料理人にとって、サクラマス魚醤の白だしは強い差別化要素になります。創作料理のベースとして最適です。",
+    hotel: "十和田湖産サクラマスという地域限定素材は「ここでしか味わえない」体験の演出に最適。特別コースや季節メニューのアクセントに。",
+    michinoeki: "十和田湖のサクラマスを使った商品は地域の物語を伝えるお土産として最適。新商品としての話題性も高いです。",
+    tonya: "十和田湖産サクラマスの魚醤白だしは市場に類似品がなく、問屋の独自提案として取引先に強いインパクトを与えます。新商品の先行取扱いで競合問屋との差別化に直結します。",
+    wholesale: "魚醤白だしは市場でもユニークなポジションの商品。取引先への新しい提案材料として活用できます。",
+    udon: "サクラマス魚醤の白だしは、独自の風味でうどんつゆに唯一無二の味わいを加えます。「十和田湖サクラマスうどん」のような限定商品の開発ベースとして提案できます。",
+    ec: "希少素材×新商品の組み合わせはECでの話題性が高く、SNS拡散も期待できます。グルメ層へのアプローチに最適です。",
+    other: "2026年2月発売の新商品。十和田湖産サクラマスの魚醤を使った唯一無二の白だしです。"
+  },
+  // --- 新規追加商品 ---
+  "shirakami-shoyu": {
+    super: "世界遺産白神地域産大豆を使用した丸大豆醤油は、産地ストーリーが明確で売場での差別化に最適です。",
+    restaurant: "白神地域産大豆の丸大豆醤油は、刺身・寿司・冷奴など素材を活かす料理に最適。産地のストーリーがメニューの付加価値になります。",
+    hotel: "世界遺産白神の地域素材は、宿泊客への話題提供に最適。卓上醤油として「白神大豆」のストーリーが特別感を演出します。",
+    michinoeki: "世界遺産白神ブランドは観光客の関心が高く、お土産としての訴求力が抜群です。",
+    tonya: "世界遺産白神ブランドは取引先への提案で話題性・差別化力が高い商品です。",
+    wholesale: "白神地域産大豆という独自素材の醤油は、取引先への新しい提案材料になります。",
+    udon: "丸大豆醤油の深い旨みは、めんつゆの味わいに奥行きを加えます。「白神大豆使用」の表記は商品の付加価値になります。",
+    ec: "世界遺産白神の産地ストーリーはECでの商品説明に訴求力があり、グルメ層に響きます。",
+    other: "世界遺産白神地域産大豆と秋田県産小麦使用の丸大豆醤油。産地のストーリーで差別化できます。"
+  },
+  "marudaizu-shoyu": {
+    super: "国産原料100%の本醸造醤油は品質志向の消費者に支持されます。つけ・かけ・煮物と汎用性が高く棚回転に貢献します。",
+    restaurant: "国産丸大豆の本醸造醤油は芳醇な香りが特徴。煮物・つけ・かけと万能に使え、仕入れの一本化が可能です。",
+    hotel: "国産原料100%の安心感は品質重視のホテル・旅館に最適。調理用・卓上用の両方に使える汎用性があります。",
+    michinoeki: "国産丸大豆しょうゆは安心・安全志向の消費者に人気。手頃な価格帯で日常使いのお土産に最適です。",
+    tonya: "国産原料100%の本醸造醤油は取引先への提案力が高く、品質と価格のバランスが良い定番商品です。",
+    wholesale: "汎用性が高く安定需要のある国産丸大豆醤油は、卸の定番商品として取扱いやすい商品です。",
+    udon: "国産原料100%の本醸造醤油は、めんつゆのベースとして安定した品質と風味を提供します。",
+    ec: "国産原料100%は商品ページでの訴求ポイントとして強力。日常使いの調味料としてリピート購入が見込めます。",
+    other: "国産原料のみ使用の本醸造醤油。ほのかな甘みと芳醇な香りで幅広い料理に対応できます。"
+  },
+  "fukuju-shoyu": {
+    super: "調理用・卓上用兼用の定番醤油として棚に安定感をもたらします。価格帯も手頃で日常使いに最適です。",
+    restaurant: "調理用として安定したコストパフォーマンスを発揮。大量使用にも対応しやすい定番醤油です。",
+    hotel: "調理場での大量使用に適した定番醤油。安定品質とコスト面で厨房の負担を軽減します。",
+    michinoeki: "手頃な価格の定番醤油は地元客のリピート購入に最適です。",
+    tonya: "定番醤油として取引先の小売店・飲食店への提案がしやすく、安定した回転が見込めます。",
+    wholesale: "定番商品として安定需要があり、卸の基幹商品に適しています。",
+    udon: "コストパフォーマンスに優れた醤油で、めんつゆの大量製造時のベース醤油として適しています。",
+    ec: "定番醤油としてまとめ買いやセット販売に組み込みやすい商品です。",
+    other: "調理用・卓上用兼用の定番醤油。安定品質で幅広い用途に使えます。"
+  },
+  "tokkyuu-shoyu": {
+    super: "本醸造の厳選原料醤油はこだわり商品棚のラインナップ強化に最適。うま味の強さとキレのある風味で差別化できます。",
+    restaurant: "うま味が強くキレのある風味はプロの料理人に評価されます。料理の仕上がりが一段上がる本醸造醤油です。",
+    hotel: "厳選原料・本醸造の品質は高級路線のホテル・旅館に最適。料理の格を上げる醤油として提案できます。",
+    michinoeki: "本醸造・厳選原料のこだわりはお土産としての付加価値を高めます。",
+    tonya: "厳選原料の本醸造醤油は取引先の品質志向に応える高付加価値商品として提案できます。",
+    wholesale: "高付加価値の本醸造醤油は利益率の改善に貢献する商品です。",
+    udon: "うま味が強くキレのある風味は、高品質めんつゆの原料として味の格を上げます。",
+    ec: "本醸造・厳選原料の訴求はECでの品質アピールに直結します。",
+    other: "本醸造・厳選原料使用。うま味が強くキレのある風味が特徴の上級醤油です。"
+  },
+  "usukuchi": {
+    super: "淡口醤油は煮物需要のある家庭に支持されます。素材の色を活かす料理に最適で、醤油棚のラインナップ拡充に貢献します。",
+    restaurant: "素材の色を鮮やかに仕上げる淡口醤油は、見た目の美しさが求められる和食に不可欠です。",
+    hotel: "煮物や椀物の色合いを美しく仕上げる淡口醤油は、会席料理や朝食の和食メニューに最適です。",
+    michinoeki: "料理好きの観光客向けに、醤油の品揃え拡充として提案できます。",
+    tonya: "淡口醤油は飲食店・旅館への提案に欠かせない基本商品。福寿ブランドでラインナップを揃える提案ができます。",
+    wholesale: "淡口醤油は和食系の取引先への必須提案商品です。",
+    udon: "淡口醤油は色の薄いうどんつゆの製造に最適。素材の色を活かした上品な仕上がりになります。",
+    ec: "醤油のバリエーション展開としてセット販売に組み込みやすい商品です。",
+    other: "素材の色を鮮やかに仕上げる淡口醤油。煮物に最適です。"
+  },
+  "nama-tsubu": {
+    super: "加熱処理・アルコール無添加の生味噌は健康志向の消費者に強く支持されます。百年蔵みそとの併売で味噌コーナーの充実を図れます。",
+    restaurant: "生きた味噌の風味は味噌汁・味噌料理の味わいを引き上げます。無添加・無加熱の訴求がメニューの付加価値になります。",
+    hotel: "無添加・無加熱の生味噌は朝食の味噌汁の品質向上に直結。こだわりの朝食演出に最適です。",
+    michinoeki: "生きたままの味噌は食へのこだわりを持つ観光客に人気。百年蔵みそと合わせて品揃えを充実できます。",
+    tonya: "無添加生味噌は健康志向トレンドに合致。取引先の小売店・飲食店への提案力を高めます。",
+    wholesale: "健康志向の高い無添加生味噌は取引先への新しい提案材料になります。",
+    udon: "味噌煮込みうどんのベースとして、生きた味噌の風味が料理の品質を引き上げます。",
+    ec: "無添加・無加熱の生味噌は健康志向層に強くアピールできます。",
+    other: "加熱処理・アルコール添加を一切行わない、生きたままの美味しさの粒味噌です。"
+  },
+  "genen-miso": {
+    super: "かるしお認定・塩分33%カットは健康志向の消費者に直接響きます。高齢者層や健康管理層からの需要が見込めます。",
+    restaurant: "塩分を気にする顧客への対応メニューに活用できます。「減塩味噌使用」の表記は健康志向の集客に貢献します。",
+    hotel: "健康配慮メニューの一環として減塩味噌を採用することで、宿泊客の満足度向上につながります。",
+    michinoeki: "健康志向のお土産として、特に中高年の観光客に人気が見込めます。",
+    tonya: "減塩・かるしお認定は取引先の健康志向ニーズに応える商品。高齢者向けチャネルへの提案に最適です。",
+    wholesale: "健康志向の減塩味噌は、スーパー・病院・介護施設向けの提案に活用できます。",
+    udon: "減塩志向の味噌煮込みうどんや味噌ベースのつゆ開発に活用できます。",
+    ec: "かるしお認定・塩分33%カットはECの商品ページで強力な訴求ポイントになります。",
+    other: "かるしお認定の減塩生みそ。食塩分8%で美味しさと健康を両立した味噌です。"
+  },
+  "amakuchi-miso": {
+    super: "12割糀の甘口みそは味噌汁はもちろん、料理の隠し味にも使えます。甘口味噌を求める家庭層に人気です。",
+    restaurant: "甘口味噌は味噌漬け・味噌だれ・デザートなど幅広い用途に使えます。やさしい甘さで女性客に好評です。",
+    hotel: "12割糀の甘口味噌は上品な甘さで朝食の味噌汁に最適。味の変化をつける2種味噌提供にも使えます。",
+    michinoeki: "甘口味噌は味噌の食べ比べセットに組み込むとお土産としての魅力が増します。",
+    tonya: "甘口味噌は味噌ラインナップの拡充に最適。取引先の品揃え提案に貢献します。",
+    wholesale: "12割糀の甘口味噌は差別化された味噌として取引先への提案力があります。",
+    udon: "甘口味噌は味噌煮込みうどん・味噌ベースのつけ汁に、やさしい甘さと深いコクを加えます。",
+    ec: "12割糀の甘口味噌は味噌好きのリピーターに支持される商品です。",
+    other: "米こうじたっぷりの12割糀甘口みそ。やさしい甘さが特徴です。"
+  },
+  "yurara-aka": {
+    super: "辛口の赤味噌は味噌汁の味に深みを求める消費者に人気。白づくりとのセット提案で売場の幅が広がります。",
+    restaurant: "辛口の赤味噌は力強い味わいで、赤だし・煮込み・たれのベースに最適です。",
+    hotel: "赤味噌は朝食の味噌汁バリエーションに。白味噌との合わせ味噌提案もできます。",
+    michinoeki: "赤と白の2種セットはお土産として人気。秋田の味噌文化を伝える商品です。",
+    tonya: "赤づくり・白づくりのセット提案で取引先の味噌棚を充実させられます。",
+    wholesale: "定番の秋田味噌として安定需要があり、取引先への基本提案に適しています。",
+    udon: "辛口の赤味噌は味噌煮込みうどんに深い味わいを加えます。",
+    ec: "白づくりとのセット販売で、味噌の食べ比べ企画に活用できます。",
+    other: "糀歩合8割の辛口みそ。山吹色に仕上げた本格秋田みそです。"
+  },
+  "yurara-shiro": {
+    super: "まろやかな白味噌は幅広い料理に使いやすく、味噌初心者にも人気。赤づくりとの併売がおすすめです。",
+    restaurant: "白味噌のまろやかさは洋風料理との相性も良く、クリーム系ソースのアクセントにも使えます。",
+    hotel: "白味噌のあっさりした味わいは朝食の味噌汁に最適。上品な風味で宿泊客に好評です。",
+    michinoeki: "赤と白の2種セットはお土産に最適。白味噌は特に女性客に人気です。",
+    tonya: "白づくりは赤づくりとのペア提案で取引先の味噌ラインナップを強化できます。",
+    wholesale: "まろやかな白味噌は幅広い用途に提案しやすい定番商品です。",
+    udon: "白味噌の上品な甘みは白味噌ベースのうどんつゆに最適です。",
+    ec: "赤づくりとのセット販売で購買単価アップが見込めます。",
+    other: "糀歩合8割のまろやかな白みそ。あっさりした味わいが特徴です。"
+  },
+  "satto-katsuo": {
+    super: "液状タイプの即席みそ汁は手軽さが魅力。一人暮らし・時短需要の消費者にアプローチできます。",
+    restaurant: "スタッフ用の賄い味噌汁や、小規模店舗での味噌汁提供に手軽に使えます。",
+    hotel: "客室のアメニティや簡易朝食メニューとして活用できます。",
+    michinoeki: "手軽に秋田の味を楽しめるお土産として、旅行客に人気です。",
+    tonya: "即席味噌汁は回転率が高く、取引先のコンビニ・小売店への提案に適しています。",
+    wholesale: "手軽さが魅力の即席味噌汁は幅広い取引先に提案できます。",
+    udon: "うどん店でのセットメニュー（うどん＋味噌汁）に手軽に活用できます。",
+    ec: "手軽な味噌汁はまとめ買い需要が高く、定期購入にもつながりやすい商品です。",
+    other: "液状タイプの即席みそ汁の素。かつおだしの風味で手軽に本格味噌汁が作れます。"
+  },
+  "satto-niboshi": {
+    super: "にぼしだしの即席みそ汁は東北の味として根強い人気があります。かつおだしとの2種展開で棚の幅が広がります。",
+    restaurant: "にぼしだしの味噌汁はスタッフ用・サイドメニューとして手軽に提供できます。",
+    hotel: "客室アメニティとして、かつおだしと合わせて2種提供すると宿泊体験の充実につながります。",
+    michinoeki: "にぼしだしは秋田らしい味として観光客に人気。かつおだしとのセット販売がおすすめです。",
+    tonya: "かつおだしとのセット提案で取引先の品揃え充実に貢献します。",
+    wholesale: "即席味噌汁の2種展開は取引先への提案バリエーションを広げます。",
+    udon: "うどん店でのサイドメニュー用として手軽に活用できます。",
+    ec: "かつおだしとのバラエティセットで購買単価アップが見込めます。",
+    other: "液状タイプの即席みそ汁の素。にぼしだしの風味で秋田の味を手軽に楽しめます。"
+  },
+  "pork-miso": {
+    super: "秋田県産八幡平ポーク使用の肉味噌は、ご飯のお供として高い需要があります。地元素材のストーリーで差別化できます。",
+    restaurant: "肉味噌は冷奴のトッピング・ご飯のお供・麺類の味変アイテムとしてメニューに組み込みやすい商品です。",
+    hotel: "朝食ビュッフェのご飯コーナーに並べると人気アイテムになります。秋田県産ポーク使用の訴求力があります。",
+    michinoeki: "ご飯のお供として人気の肉味噌は、お土産としての購買率が高い商品です。",
+    tonya: "ご飯のお供・肉味噌カテゴリは安定需要があり、取引先の小売店への提案に最適です。",
+    wholesale: "肉味噌は飲食店・小売店の両方に提案しやすい商品です。",
+    udon: "肉味噌うどんのトッピングとして、またうどん店のサイドメニューとして活用できます。",
+    ec: "ご飯のお供系商品はECでの売上が伸びているカテゴリ。まとめ買い需要も見込めます。",
+    other: "秋田県産八幡平ポークの挽き肉を使用した肉味噌。ご飯のお供に最適です。"
+  },
+  "hinai-miso": {
+    super: "比内地鶏の肉味噌は希少性とブランド力でお土産需要にも対応。日常使いと贈答の両方で売れる商品です。",
+    restaurant: "比内地鶏の肉味噌はメニューのトッピングや味変アイテムに。「比内地鶏使用」の表記が集客力を高めます。",
+    hotel: "比内地鶏ブランドの肉味噌は、朝食や土産物コーナーで秋田の食文化を伝える商品として最適です。",
+    michinoeki: "比内地鶏ブランドの肉味噌はお土産としての人気が非常に高い。秋田を代表する一品です。",
+    tonya: "比内地鶏ブランドの肉味噌は取引先への提案力が高く、ギフト需要も見込めます。",
+    wholesale: "比内地鶏の肉味噌はブランド力で取引先の棚を獲得しやすい商品です。",
+    udon: "比内地鶏肉味噌はうどんのトッピングに最適。「比内地鶏肉味噌うどん」としてメニュー化できます。",
+    ec: "比内地鶏のブランド力はEC検索でのクリック率向上に直結。ギフト需要も高い商品です。",
+    other: "秋田県産比内地鶏の粗挽き肉を使用した肉味噌。比内地鶏のブランド力が魅力です。"
+  },
+  "washoku-no-moto": {
+    super: "濃縮5倍の万能つゆは使い勝手が良く、棚回転率が高い商品。煮物・丼物・炒め物と幅広い用途で日常使いに最適です。",
+    restaurant: "濃縮5倍の万能つゆは仕込み時間の短縮と味の安定に貢献。煮物・丼物のベースとして業務用ニーズに応えます。",
+    hotel: "調理場での万能調味料として重宝します。煮物・丼物・和食メニュー全般の味付けが安定します。",
+    michinoeki: "万能つゆはリピート購入されやすい実用的なお土産。調理好きの観光客に人気です。",
+    tonya: "濃縮5倍の万能つゆは取引先の飲食店・小売店の両方に提案しやすい商品です。",
+    wholesale: "万能つゆは飲食店・小売ともに安定需要があり、卸の定番商品に適しています。",
+    udon: "濃縮5倍の万能つゆは、めんつゆのOEM開発のベースや、うどん店での煮物・丼物メニューに活用できます。",
+    ec: "万能つゆはリピート購入率が高く、まとめ買い需要も見込めます。",
+    other: "本醸造しょうゆに鰹と昆布の旨味を加えた濃縮5倍の万能つゆ。煮物・丼物・炒め物に。"
+  },
+  "konbu-shirodashi": {
+    super: "化学調味料無添加・北海道産日高昆布使用の白だしは、健康志向と品質志向の両方に訴求できます。",
+    restaurant: "化学調味料無添加の白だしは、素材の味を活かす和食に最適。出し巻き卵・茶碗蒸し・うどんつゆに重宝します。",
+    hotel: "昆布白だしは上品な味わいで、朝食の出し巻き卵や煮物の味付けに最適。無添加の品質感がホテルの格に合います。",
+    michinoeki: "ボトルに昆布が入った見た目のインパクトはお土産として購買意欲を刺激します。",
+    tonya: "化学調味料無添加の白だしは健康志向の取引先に提案しやすい商品です。",
+    wholesale: "無添加白だしは飲食店・小売ともに需要が拡大しているカテゴリです。",
+    udon: "化学調味料無添加の昆布白だしは、うどんつゆのベースとして上品な味わいを実現します。色の薄いつゆに最適です。",
+    ec: "化学調味料無添加・昆布入りボトルのビジュアルはECでの訴求力が高い商品です。",
+    other: "北海道産日高昆布使用・化学調味料無添加の白だし。ボトル内に昆布を含有。"
+  },
+  "hinai-tsuyu": {
+    super: "比内地鶏のめんつゆは希少性が高く、こだわり商品棚の目玉になります。麺類好きの消費者にアピールできます。",
+    restaurant: "比内地鶏だしのめんつゆは、うどん・そばのかけ汁として最高級の味わい。「比内地鶏つゆ使用」の表記で集客力が上がります。",
+    hotel: "比内地鶏つゆは宿泊客向けの麺メニューに最適。秋田らしさを全面に打ち出せます。",
+    michinoeki: "比内地鶏のめんつゆはお土産としてのブランド力が抜群。麺好きの観光客に人気です。",
+    tonya: "比内地鶏つゆは取引先の飲食店・小売店への提案力が高い商品。ブランド力で棚を確保しやすいです。",
+    wholesale: "比内地鶏ブランドのめんつゆは高付加価値商品として取引先に提案しやすいです。",
+    udon: "比内地鶏だしのめんつゆは「比内地鶏うどん」の開発に最適。濃縮4倍で業務用にも使いやすい仕様です。",
+    ec: "比内地鶏ブランドのめんつゆはEC検索からの流入が見込め、ギフト需要も高い商品です。",
+    other: "比内地鶏ガラだし使用の濃縮4倍めんつゆ。かつお・むろあじ節の風味も加えた本格派。"
+  },
+  "premium-hinai-shoyu": {
+    super: "PREMIUMラインの比内地鶏だしつゆは高単価・高付加価値で粗利率改善に貢献します。ギフト需要にも対応。",
+    restaurant: "透明だし仕立ての醤油味は、素材の色を活かす料理に最適。椎茸・かつおぶしの風味で本格的な味わいです。",
+    hotel: "PREMIUMラインは高級感があり、特別コースやルームサービスのつゆとして最適です。",
+    michinoeki: "PREMIUMラインはギフト・お土産として高級感があり、贈答需要に応えます。",
+    tonya: "PREMIUMラインは高単価で利益率が高く、取引先のギフトコーナーへの提案に最適です。",
+    wholesale: "PREMIUMラインは高付加価値商品として取引先の品揃え向上に貢献します。",
+    udon: "PREMIUMだしつゆは高級うどんメニューのつゆとして、特別感を演出できます。",
+    ec: "PREMIUMラインはギフト需要が高く、ECでの高単価販売に適しています。",
+    other: "比内地鶏鶏がらの透明だしに椎茸・かつおぶしを合わせた醤油味のPREMIUMだしつゆ。"
+  },
+  "premium-hinai-shio": {
+    super: "塩味のPREMIUMだしつゆは醤油味と合わせたセット販売で売場の幅が広がります。",
+    restaurant: "塩味の透明だしは鍋物・スープ・麺類に最適。素材の味を引き立てる上品な味わいです。",
+    hotel: "塩味は洋食にも合わせやすく、コンソメ代わりに使えるなど活用の幅が広い商品です。",
+    michinoeki: "醤油味とのセット販売でギフトの選択肢が広がります。",
+    tonya: "醤油味とのペア提案で取引先への提案バリエーションが広がります。",
+    wholesale: "塩味・醤油味のセット提案は取引先のギフトコーナー充実に貢献します。",
+    udon: "塩味の比内地鶏だしつゆは、塩うどんのベースとして差別化された商品開発に活用できます。",
+    ec: "醤油味とのセット販売で購買単価アップが見込めます。",
+    other: "比内地鶏鶏がらの透明だしに玉ねぎ・こんぶ・椎茸を合わせた塩味のPREMIUMだしつゆ。"
+  },
+  "kiritanpo-tsuyu": {
+    super: "きりたんぽ鍋つゆは秋冬の季節商品として売場の鮮度感を高めます。秋田の名物料理を家庭で再現できる人気商品です。",
+    restaurant: "きりたんぽ鍋は秋田の名物料理。季節メニューとして提供すれば集客力のあるメニューになります。",
+    hotel: "きりたんぽ鍋は秋田を訪れる宿泊客が期待する料理No.1。鍋つゆの品質が料理の評価に直結します。",
+    michinoeki: "きりたんぽ鍋つゆは秋田土産の定番。特に秋冬シーズンの売上に大きく貢献します。",
+    tonya: "きりたんぽ鍋つゆは季節商品として取引先のスーパー・小売店への提案に最適です。",
+    wholesale: "秋冬の季節商品として安定した需要がある鍋つゆ。販促時期に合わせた提案が効果的です。",
+    udon: "きりたんぽ鍋つゆはうどんの鍋メニュー用としても活用できます。秋田名物×うどんの限定メニューに。",
+    ec: "秋冬のEC需要が高い鍋つゆ。きりたんぽセットとの同梱販売で購買単価アップが見込めます。",
+    other: "比内地鶏鶏がら使用・化学調味料不使用のきりたんぽ鍋つゆ。濃縮5倍でゴボウ風味。"
+  },
+  "hanawa-su": {
+    super: "酸度11.2%の濃い酢は少量で効くため、コスパの良さをアピールできます。江戸時代の製法というストーリーも魅力です。",
+    restaurant: "一般的な酢の約3倍の酸度で少量で効くため、料理の仕上がりが安定します。寿司飯・酢の物に最適です。",
+    hotel: "江戸時代創業の製法で作る酢は、料理の付加価値を高めるストーリーがあります。寿司・酢の物に。",
+    michinoeki: "江戸時代の製法で作る珍しい酢は、食にこだわる観光客のお土産として話題性があります。",
+    tonya: "花輪酢は市場にない独自商品で、取引先への差別化提案に最適です。",
+    wholesale: "酸度3倍の独自性のある酢は、取引先への新しい提案材料になります。",
+    udon: "花輪酢は酢うどん・冷やしうどんの味付けに、少量で効く酸味を加えられます。",
+    ec: "江戸時代の製法・酸度3倍という独自性はECでの話題づくりに最適です。",
+    other: "江戸時代創業の製法で作る酢。酸度11.2%で一般的な酢の約3倍濃く、少量で効きます。"
+  },
+  "butadon-uma": {
+    super: "豚丼のたれは手軽に本格的な味を再現でき、食卓の即戦力商品として回転率が高いです。",
+    restaurant: "自家製味噌・醤油・米糀ベースの豚丼のたれは、丼メニューの味付けに手軽に使えます。",
+    hotel: "豚丼は手軽な昼食・ルームサービスメニューに活用できます。秋田の自家製調味料使用の付加価値も。",
+    michinoeki: "豚丼のたれはお土産として人気。自宅で手軽に秋田の味を再現できる商品です。",
+    tonya: "豚丼のたれは小売店への提案しやすい商品。辛口にんにくとのセット提案が効果的です。",
+    wholesale: "手軽に使えるたれ類は飲食店・小売の両方に需要があります。",
+    udon: "肉うどんのたれベースとして活用できます。豚バラ肉うどんの味付けに最適です。",
+    ec: "豚丼のたれはECで人気のカテゴリ。旨だれと辛口のセット販売が効果的です。",
+    other: "自家製味噌・醤油・米糀使用の豚丼のたれ。濃厚な甘みと旨味が特徴です。"
+  },
+  "butadon-kara": {
+    super: "辛口にんにく味は若い世代にアピールできます。旨だれとのセット提案で購買単価アップが見込めます。",
+    restaurant: "ピリ辛の豚丼は男性客に人気のメニュー。旨だれとの2種展開でメニューの幅が広がります。",
+    hotel: "辛口にんにくの豚丼は食事処・レストランの定番メニューに。旨だれと合わせた2種提供も。",
+    michinoeki: "旨だれとの2本セットはお土産として購買単価アップに貢献します。",
+    tonya: "旨だれと辛口のセット提案で取引先の棚獲得がしやすくなります。",
+    wholesale: "2種のたれのセット提案は取引先への訴求力を高めます。",
+    udon: "辛口にんにくのたれは辛味うどん・ピリ辛肉うどんの味付けに活用できます。",
+    ec: "旨だれとのセット販売でバリエーションを提供し、購買単価アップにつなげます。",
+    other: "自家製味噌・醤油・米糀使用の辛口豚丼のたれ。にんにくと豆板醤のピリ辛味です。"
+  },
+  "misozuke-daikon": {
+    super: "国産大根の味噌漬けは漬物コーナーの定番商品。秋田味噌使用のこだわりで差別化できます。",
+    restaurant: "パリッとした歯ざわりの味噌漬け大根は、定食の付け合わせ・箸休めとして重宝します。",
+    hotel: "朝食ビュッフェの漬物コーナーに秋田の味噌漬けは最適。地元食材の演出になります。",
+    michinoeki: "秋田の味噌漬けは手軽なお土産として人気。価格帯も手頃で購入のハードルが低いです。",
+    tonya: "漬物は安定需要のある商品。秋田味噌使用の味噌漬けは差別化ポイントになります。",
+    wholesale: "漬物は飲食店・小売ともに安定した需要がある定番商品です。",
+    udon: "うどん店の付け合わせ・箸休めとして、味噌漬け大根は定番のサイドメニューです。",
+    ec: "漬物はECでのまとめ買い需要があり、セット販売に組み込みやすい商品です。",
+    other: "国産青首大根を秋田味噌に漬込んだ漬物。パリッとした歯ざわりが特徴です。"
+  },
+  "misozuke-konbu": {
+    super: "味噌漬け昆布はご飯のお供として人気。味噌漬け大根とのセット提案がおすすめです。",
+    restaurant: "味噌漬け昆布は小鉢・お通し・箸休めに使いやすい食材です。",
+    hotel: "朝食の漬物バリエーションとして、味噌漬け昆布は品のあるラインナップに貢献します。",
+    michinoeki: "味噌漬けシリーズとしてセット販売がおすすめ。お土産の選択肢が広がります。",
+    tonya: "漬物シリーズの品揃えとして、大根と合わせた提案が効果的です。",
+    wholesale: "味噌漬けシリーズの取扱いで漬物の品揃えを充実できます。",
+    udon: "うどん店の小鉢・箸休めとして活用できます。",
+    ec: "味噌漬けシリーズのセット販売で購買単価アップが見込めます。",
+    other: "北海道産昆布を秋田味噌にじっくり漬込んだ漬物です。"
+  },
+  "amakara-daikon": {
+    super: "甘辛い大根漬けはおつまみ・ご飯のお供として人気。唐辛子の刺激がクセになる商品です。",
+    restaurant: "甘辛い漬物はおつまみメニューに最適。お酒との相性も良く、居酒屋業態に特に提案しやすいです。",
+    hotel: "朝食の漬物バリエーションに。ピリ辛の味わいは食欲をそそります。",
+    michinoeki: "甘辛大根漬けはおつまみ系のお土産として男性客に人気です。",
+    tonya: "おつまみ系漬物は酒販店チャネルにも提案でき、取引先の幅が広がります。",
+    wholesale: "おつまみ系漬物は飲食店・酒販店への提案に活用できます。",
+    udon: "うどん店のおつまみメニュー・箸休めとして活用できます。",
+    ec: "おつまみ系漬物はECでの購買層が広く、セット販売に組み込みやすいです。",
+    other: "唐辛子でピリッと甘辛く味付けした大根漬け。ご飯のお供・おつまみに最適です。"
+  }
+};
+
+// --- キーワード ---
+const KEYWORDS_DB = {
+  super: {
+    new:    ["Amazon味噌カテゴリ1位（販売実績）", "無添加・天然醸造（健康志向対応）", "試食販売・POP素材提供（販促支援）"],
+    follow: ["新商品情報（昆布とかつおのしょうゆ・サクラマス白だし）", "季節の販促企画提案", "売場改善・棚割り提案"],
+    newproduct: ["2026年新商品2品の先行導入", "話題性による集客効果", "新商品導入キャンペーン支援"],
+    regular: ["売上データの共有・分析", "季節商品の提案", "リピート発注の安定供給"]
+  },
+  restaurant: {
+    new:    ["秋田県産・地産地消（メニューの付加価値）", "全国品評会受賞歴（信頼と話題性）", "無料サンプル・試食提案"],
+    follow: ["新商品の先行試用", "メニュー開発サポート", "安定供給の実績報告"],
+    newproduct: ["サクラマス魚醤白だし（唯一無二の差別化）", "昆布とかつおのしょうゆ（時短・味の安定）", "新メニュー開発の提案"],
+    regular: ["季節メニューへの提案", "使用状況ヒアリング", "追加商品の提案"]
+  },
+  hotel: {
+    new:    ["秋田県産・地産地消（宿泊体験の付加価値）", "比内地鶏ブランド認証（希少性）", "OEM対応可能（オリジナル商品化）"],
+    follow: ["宿泊プラン・コースメニューへの新提案", "新商品の先行案内", "インバウンド対応の食材提案"],
+    newproduct: ["十和田湖サクラマス白だし（地域限定の特別感）", "季節限定メニューへの活用", "宿泊プランとの連動企画"],
+    regular: ["宿泊客の反応・フィードバック確認", "季節の食材提案", "発注ロットの最適化"]
+  },
+  michinoeki: {
+    new:    ["秋田の老舗ブランド（観光客への訴求力）", "Amazon1位の実績（信頼性）", "お土産に最適なパッケージ"],
+    follow: ["新商品の追加提案", "季節の販促企画", "売場レイアウト改善提案"],
+    newproduct: ["2026年新商品で売場の鮮度感アップ", "話題性による集客効果", "試食販売の実施提案"],
+    regular: ["売れ筋の確認・補充提案", "季節商品の入れ替え", "POPの更新・追加"]
+  },
+  tonya: {
+    new:    ["Amazon味噌カテゴリ1位（取引先への提案力）", "全国品評会受賞（品質の裏付け）", "OEM対応可能（問屋オリジナル商品の企画）"],
+    follow: ["新商品2品の先行取扱い提案", "取引先からの反応・売上データ共有", "販促物・POP素材の追加提供"],
+    newproduct: ["2026年新商品の先行案内（競合問屋との差別化）", "取引先向け提案資料の共同作成", "新商品導入キャンペーンの企画支援"],
+    regular: ["発注動向と在庫状況の確認", "季節商品の提案と棚割り支援", "取引条件・掛率の見直し相談"]
+  },
+  wholesale: {
+    new:    ["OEM対応可能（オリジナル商品の企画）", "全国品評会受賞（取引先への提案力）", "安定供給体制（150年の製造実績）"],
+    follow: ["新商品の取扱開始提案", "取引先の反応フィードバック", "販促支援の拡充"],
+    newproduct: ["新商品2品の先行取扱い", "取引先への提案資料の提供", "新商品導入キャンペーン支援"],
+    regular: ["発注動向の確認", "在庫状況の共有", "取引条件の見直し"]
+  },
+  udon: {
+    new:    ["自家製本醸造ベースのめんつゆ原料（味の差別化）", "OEM対応（オリジナルめんつゆの共同開発）", "秋田県産原料100%（商品パッケージの訴求力）"],
+    follow: ["新商品（昆布かつおしょうゆ・サクラマス白だし）の試用提案", "つゆの味調整・カスタマイズ相談", "安定供給実績の報告と発注ロット最適化"],
+    newproduct: ["サクラマス魚醤白だし（限定うどん商品の開発素材）", "昆布とかつおのしょうゆ（めんつゆの風味アップ）", "比内地鶏スープ（高付加価値うどん商品の開発）"],
+    regular: ["原料使用状況と在庫の確認", "季節限定商品への提案", "品質・納期の振り返り"]
+  },
+  ec: {
+    new:    ["Amazon味噌カテゴリ1位（実績訴求）", "商品写真・説明文の素材提供", "レビュー獲得支援"],
+    follow: ["新商品のEC先行販売提案", "セット商品・ギフト企画", "季節キャンペーンの提案"],
+    newproduct: ["新商品の先行販売・予約販売", "SNS拡散用コンテンツ提供", "インフルエンサー施策の提案"],
+    regular: ["売上データの分析・共有", "在庫・配送状況の確認", "ページ改善の提案"]
+  },
+  other: {
+    new:    ["創業150年以上の歴史と信頼", "秋田県産原料100%のこだわり", "全国品評会受賞の品質"],
+    follow: ["新商品情報の共有", "取引実績の振り返り", "今後の展開提案"],
+    newproduct: ["2026年新発売の注目商品", "他にない独自素材の商品", "導入支援体制の充実"],
+    regular: ["安定した品質と供給", "季節の提案", "関係強化"]
+  }
+};
+
+// --- 想定Q&A ---
+const QA_DB = {
+  super: [
+    { q: "他の味噌メーカーとの違いは？", a: "秋田県産の米・大豆・水すべてにこだわり、天然醸造・無添加で仕込んでいます。全国味噌鑑評会でも受賞実績があり、Amazon味噌カテゴリ1位も獲得しています。" },
+    { q: "販促支援はありますか？", a: "POP素材の提供、試食販売の実施サポートを行っています。Amazon1位のシールや受賞歴の表示で売場の訴求力を高められます。" },
+    { q: "最低ロットと納期は？", a: "商品によりますが、小ロットからの対応も可能です。具体的な数量・納期は担当がすぐにお調べします。" },
+    { q: "賞味期限はどのくらい？", a: "味噌は約6ヶ月、醤油は約1年が目安です。無添加のため一般的な商品より短めですが、品質への信頼につながっています。" },
+    { q: "返品対応はできますか？", a: "賞味期限内の商品であれば、条件に応じて対応させていただきます。詳細は個別にご相談ください。" }
+  ],
+  restaurant: [
+    { q: "業務用サイズはありますか？", a: "味噌・醤油・つゆ類は業務用サイズもご用意しています。使用量に合わせた最適なサイズをご提案します。" },
+    { q: "安定して供給できますか？", a: "創業150年以上の製造体制で、安定した供給が可能です。定期発注いただければ在庫切れのリスクを最小化できます。" },
+    { q: "サンプルをもらえますか？", a: "もちろんです。実際に料理に使っていただき、味を確認してからご判断いただけます。サンプルは無料でお送りします。" },
+    { q: "メニューに産地表示してよい？", a: "ぜひお使いください。「秋田県産原料使用」「天然醸造」「比内地鶏ブランド認証」などの表記素材もご提供できます。" },
+    { q: "他の飲食店での採用実績は？", a: "秋田県内を中心に多数の飲食店・ホテルでご採用いただいています。具体的な事例は商談時にご紹介します。" }
+  ],
+  hotel: [
+    { q: "OEMでオリジナル商品は作れますか？", a: "はい、OEM生産に対応しています。旅館・ホテル様のオリジナルラベルでの味噌・醤油の製造が可能です。" },
+    { q: "インバウンド客向けの対応は？", a: "英語のパンフレット素材もご用意できます。「MISO」「SOY SAUCE」は海外でも認知度が高く、お土産としても人気です。" },
+    { q: "大量注文への対応は？", a: "宴会シーズンなどの大量注文にも対応可能です。事前にご相談いただければ計画的に製造・納品いたします。" },
+    { q: "他のホテルでの採用実績は？", a: "秋田県内のホテル・旅館を中心に多数の採用実績があります。宿泊プランの差別化に貢献しています。" },
+    { q: "比内地鶏スープはどう使われている？", a: "鍋料理のベース、朝食のスープ、コースの一品など幅広く活用されています。比内地鶏の名前だけで宿泊客の期待値が上がります。" }
+  ],
+  michinoeki: [
+    { q: "お土産用のパッケージはありますか？", a: "贈答にも使いやすいパッケージをご用意しています。セット商品の企画もご相談いただけます。" },
+    { q: "試食販売はできますか？", a: "試食販売のサポートも行っています。特に百年蔵みその試食は購買率が高く、効果的です。" },
+    { q: "季節限定商品はありますか？", a: "新商品（昆布とかつおのしょうゆ、サクラマス魚醤白だし）は話題性があり、季節の売場づくりにご活用いただけます。" },
+    { q: "売れ筋はどの商品ですか？", a: "百年蔵みそと比内地鶏スープが観光客に特に人気です。秋田らしさを感じる商品が選ばれる傾向にあります。" }
+  ],
+  tonya: [
+    { q: "問屋向けの掛率・取引条件は？", a: "取引規模に応じてご相談させていただきます。継続的なお取引には優遇条件もご用意しています。まずは取扱いの方向性をお聞かせください。" },
+    { q: "問屋の取引先（小売店・飲食店）向けの営業支援は？", a: "商品カタログ・POP素材・商品説明資料をご用意しています。必要に応じて営業同行も対応可能です。貴社の取引先向けにカスタマイズした提案資料も作成できます。" },
+    { q: "在庫を持つリスクが心配だが、最低ロットは？", a: "小ロットからの対応も可能です。まずは売れ筋商品に絞って導入し、反応を見ながら品揃えを広げていく方法をおすすめしています。" },
+    { q: "他の問屋での取扱い実績は？", a: "秋田県内を中心に複数の問屋様とお取引がございます。具体的な実績は商談時にご紹介します。" },
+    { q: "オリジナルラベル（OEM）の対応は可能？", a: "はい、OEM生産に対応しています。問屋様オリジナルブランドの味噌・醤油の製造も実績があります。最低ロット・納期は商品内容に応じてご案内します。" }
+  ],
+  wholesale: [
+    { q: "OEM対応の最低ロットは？", a: "OEM商品の最低ロットは商品カテゴリによって異なります。まずはご希望の商品内容をお聞かせください。" },
+    { q: "取引条件を教えてください", a: "掛率・支払い条件は取引規模に応じてご相談させていただきます。まずはお取引の方向性をお聞かせください。" },
+    { q: "営業支援資料はもらえますか？", a: "商品カタログ・POP素材・商品説明資料をご用意しています。貴社の取引先向けにカスタマイズした資料も作成可能です。" },
+    { q: "全国配送は可能ですか？", a: "全国への配送に対応しています。物流条件は数量・頻度に応じて最適なプランをご提案します。" }
+  ],
+  udon: [
+    { q: "めんつゆのOEM開発はできますか？", a: "はい、OEM生産に対応しています。貴社オリジナルのめんつゆを、弊社の本醸造醤油・だし素材をベースに共同開発できます。味の調整・試作も対応します。" },
+    { q: "業務用の大容量サイズはありますか？", a: "醤油・つゆ類は業務用サイズもご用意しています。製造ラインの使用量に合わせた最適なサイズ・納入頻度をご提案します。" },
+    { q: "安定供給は可能ですか？製造ラインが止まると困るのですが", a: "創業150年以上の製造体制で、安定した供給が可能です。定期発注いただければ在庫を確保し、欠品リスクを最小化します。" },
+    { q: "原料の産地証明は出せますか？", a: "秋田県産の米・大豆・水を使用しており、産地証明の発行が可能です。商品パッケージへの「秋田県産原料使用」表記もご活用いただけます。" },
+    { q: "他のうどんメーカーでの採用実績は？", a: "めんつゆ原料としてのお取引実績がございます。具体的な事例は守秘義務がありますが、導入効果は商談時に詳しくご説明します。" }
+  ],
+  ec: [
+    { q: "商品画像や説明文の素材はもらえますか？", a: "高解像度の商品画像、商品説明文、受賞歴のロゴデータなどをご提供しています。ECページの制作に活用いただけます。" },
+    { q: "ドロップシッピングは可能ですか？", a: "発送代行の対応も検討可能です。具体的な条件はご相談させていただきます。" },
+    { q: "Amazon以外のモールでの実績は？", a: "Amazon味噌カテゴリ1位の実績をはじめ、各ECモールでの販売実績があります。モールごとの戦略もご提案可能です。" },
+    { q: "ギフト対応はできますか？", a: "のし・包装対応のギフトセットもご用意しています。EC向けのギフトパッケージ企画もご相談いただけます。" }
+  ],
+  other: [
+    { q: "どんな商品がありますか？", a: "味噌・醤油・つゆ・比内地鶏スープを中心に、すべて秋田県産原料にこだわった商品を製造しています。" },
+    { q: "会社の特徴は？", a: "明治5年創業、150年以上の歴史を持つ秋田の老舗醸造メーカーです。天然醸造・無添加・地元素材にこだわっています。" },
+    { q: "取引を始めるにはどうすれば？", a: "まずはサンプルをお送りしますので、品質をご確認ください。その後、取引条件をご相談させていただきます。" }
+  ]
+};
+
+// --- ユーティリティ ---
+function getToday() {
+  const d = new Date();
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// --- バリデーション ---
+function validate() {
+  let ok = true;
+  const name = document.getElementById("clientName").value.trim();
+  const biz = document.getElementById("bizType").value;
+  const products = document.querySelectorAll('input[name="product"]:checked');
+
+  document.getElementById("err-clientName").style.display = name ? "none" : "block";
+  document.getElementById("err-bizType").style.display = biz ? "none" : "block";
+  document.getElementById("err-product").style.display = products.length > 0 ? "none" : "block";
+
+  if (!name || !biz || products.length === 0) ok = false;
+  return ok;
+}
+
+// --- 生成 ---
+function generate() {
+  if (!validate()) return;
+
+  const clientName = escapeHtml(document.getElementById("clientName").value.trim());
+  const bizType = document.getElementById("bizType").value;
+  const scale = document.getElementById("scale").value;
+  const area = escapeHtml(document.getElementById("area").value.trim() || "―");
+  const staffName = escapeHtml(document.getElementById("staffName").value.trim() || "―");
+  const purpose = document.getElementById("purpose").value;
+  const notes = escapeHtml(document.getElementById("notes").value.trim());
+  const selectedProducts = Array.from(document.querySelectorAll('input[name="product"]:checked')).map(cb => cb.value);
+
+  const bizLabel = BIZ_LABELS[bizType];
+  const scaleLabel = SCALE_LABELS[scale];
+  const purposeLabel = PURPOSE_LABELS[purpose];
+
+  // セクション1: プロファイル
+  const profile = PROFILES[bizType][scale];
+
+  // セクション2: 提案商品
+  let productsHtml = "";
+  selectedProducts.forEach(pid => {
+    const info = PRODUCT_INFO[pid];
+    const reason = PRODUCT_REASONS[pid][bizType];
+    productsHtml += `
+      <div class="product-card">
+        <h4>${info.name}</h4>
+        <p style="margin-bottom:6px;font-size:0.82rem;color:#888;">${info.desc}</p>
+        <p>${reason}</p>
+      </div>`;
+  });
+
+  // セクション3: キーワード
+  const keywords = KEYWORDS_DB[bizType][purpose];
+  let kwHtml = "";
+  keywords.forEach(kw => {
+    kwHtml += `<li>${kw}</li>`;
+  });
+
+  // セクション4: Q&A
+  const qaList = QA_DB[bizType];
+  let qaHtml = "";
+  qaList.forEach(item => {
+    qaHtml += `
+      <div class="qa-item">
+        <div class="q">${item.q}</div>
+        <div class="a">${item.a}</div>
+      </div>`;
+  });
+
+  // メモ（気になること）
+  let notesSection = "";
+  if (notes) {
+    notesSection = `<p style="background:var(--section-bg);padding:10px 14px;border-radius:6px;font-size:0.88rem;border-left:3px solid var(--accent);margin-bottom:8px;">${notes}</p>`;
+  }
+
+  // シート組み立て
+  const html = `
+    <div class="sheet-header">
+      <h2>商談準備シート</h2>
+      <div class="sheet-meta">
+        <div>訪問先：${clientName}</div>
+        <div>業態：${bizLabel}（${scaleLabel}）</div>
+        <div>訪問日：${getToday()}</div>
+        <div>担当：${staffName}</div>
+        <div>エリア：${area}</div>
+        <div>目的：${purposeLabel}</div>
+      </div>
+    </div>
+
+    <div class="sheet-section">
+      <h3>1. 訪問先プロファイル</h3>
+      <p>${profile}</p>
+      ${notes ? '<h3 style="margin-top:14px;font-size:0.88rem;border-bottom:1px dashed var(--border);padding-bottom:4px;">事前メモ</h3>' + notesSection : ""}
+    </div>
+
+    <div class="sheet-section">
+      <h3>2. おすすめ提案商品と推奨理由</h3>
+      ${productsHtml}
+    </div>
+
+    <div class="sheet-section">
+      <h3>3. 商談で強調すべきキーワード Top3</h3>
+      <ul class="keyword-list">
+        ${kwHtml}
+      </ul>
+    </div>
+
+    <div class="sheet-section">
+      <h3>4. 想定される質問と回答例</h3>
+      ${qaHtml}
+    </div>
+
+    <div class="sheet-section">
+      <h3>5. 商談メモ欄</h3>
+      <div class="memo-area">
+        <p>（商談中のメモにお使いください）</p>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("sheet").innerHTML = html;
+  document.getElementById("form-view").style.display = "none";
+  document.getElementById("result-view").style.display = "block";
+  window.scrollTo(0, 0);
+}
+
+function backToForm() {
+  document.getElementById("form-view").style.display = "block";
+  document.getElementById("result-view").style.display = "none";
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
