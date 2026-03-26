@@ -445,6 +445,11 @@
       </div>
 
       <div class="form-group">
+        <label for="staffRole">訪問先担当の役職</label>
+        <input type="text" id="staffRole" placeholder="例：仕入部長、店長、料理長">
+      </div>
+
+      <div class="form-group">
         <label for="purpose">訪問目的</label>
         <select id="purpose">
           <option value="new">新規開拓</option>
@@ -1334,6 +1339,7 @@ function generate() {
   const visitDate = visitDateRaw ? formatDate(visitDateRaw) : getToday();
   const area = escapeHtml(document.getElementById("area").value.trim() || "―");
   const staffName = escapeHtml(document.getElementById("staffName").value.trim() || "―");
+  const staffRole = escapeHtml(document.getElementById("staffRole").value.trim() || "―");
   const purpose = document.getElementById("purpose").value;
   const notes = escapeHtml(document.getElementById("notes").value.trim());
   const selectedProducts = Array.from(document.querySelectorAll('input[name="product"]:checked')).map(cb => cb.value);
@@ -1391,6 +1397,7 @@ function generate() {
         <div>業態：${bizLabel}（${scaleLabel}）</div>
         <div>訪問日：${visitDate}</div>
         <div>担当：${staffName}</div>
+        <div>先方役職：${staffRole}</div>
         <div>エリア：${area}</div>
         <div>目的：${purposeLabel}</div>
       </div>
